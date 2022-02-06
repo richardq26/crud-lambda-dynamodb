@@ -1,13 +1,19 @@
 service: crud-dynamodb-lambda
 
-frameworkVersion: "2"
+frameworkVersion: "3.1.0"
 
 provider:
   name: aws
   runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
   region: us-east-1
   stage: dev
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:771872734022:table/TaskTable
+# Este proyecto puede acceder a taskTable
 
 functions:
   hello:
@@ -16,6 +22,15 @@ functions:
       - httpApi:
           path: /
           method: get
+          response:
+            headers:
+              Content-Type: application/json
+  addTask:
+    handler: src/addTask.addTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
 
 resources:
   Resources:
@@ -24,16 +39,14 @@ resources:
       Properties:
         TableName: TaskTable
         BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
 
 # Hash es indicar que es la primary key
-
-
 
 plugins:
   - serverless-offline

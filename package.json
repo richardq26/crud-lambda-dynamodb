@@ -4,12 +4,17 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "sls deploy --aws-profile richard --verbose",
+    "local": "sls offline --aws-profile richard"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "aws-sdk": "^2.1069.0",
     "serverless-offline": "^8.4.0"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }
