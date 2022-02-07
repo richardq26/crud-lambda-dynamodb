@@ -3,9 +3,9 @@ const AWS = require("aws-sdk");
 module.exports.addTask = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
   const { title, description } = JSON.parse(event.body);
-  const createdAt = new Date();
+  const createdAt = new Date().toISOString();
   const id = v4();
-  const newTask = { id, title, description, createdAt };
+  const newTask = { id, title, description, createdAt, done: false };
 
   await dynamodb
     .put({
@@ -16,10 +16,10 @@ module.exports.addTask = async (event) => {
 
   return {
     statusCode: 200,
-    // headers: {
-    //   "Access-Control-Allow-Headers": "Content-Type",
-    //   "Content-Type": "application/json",
-    // },
+    headers: {
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(newTask),
   };
 };
